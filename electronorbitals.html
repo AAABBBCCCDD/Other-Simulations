@@ -1,0 +1,234 @@
+<section id="controls">
+    <label>Electrons: </label>
+    <input type="number" id="electronCount" onchange="update()" min="0" max="118" />
+    <button id="hide-s" onclick="hideS()">Hide S Orbitals</button>
+    <button id="hide-p" onclick="hideP()">Hide P Orbitals</button>
+    <button id="hide-d" onclick="hideD()">Hide D Orbitals</button>
+    <button id="hide-f" onclick="hideF()">Hide F Orbitals</button>
+</section>
+<canvas id="canv"></canvas>
+
+<script>
+    var canvas = document.getElementById("canv");
+    var ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth - 30;
+    canvas.height = window.innerHeight - 40;
+    var scale = 30;
+    const minCanvasWidth = 30;
+    const minCanvasHeight = 25;
+    if (canvas.width / minCanvasWidth < canvas.height / minCanvasHeight) {
+        scale = canvas.width / minCanvasWidth;
+    } else {
+        scale = canvas.height / minCanvasHeight;
+    }
+    var x = canvas.width / 2 - scale * 3;
+    var y = canvas.height / 2;
+
+    var sVis = true;
+    var pVis = true;
+    var dVis = true;
+    var fVis = true;
+
+
+
+    function hideS() {
+        btn = document.getElementById("hide-s");
+        if (sVis) {
+            btn.textContent = "Show S Orbitals";
+            sVis = false;
+        } else {
+            btn.textContent = "Hide S Orbitals";
+            sVis = true;
+        }
+        update();
+    }
+    function hideP() {
+        btn = document.getElementById("hide-p");
+        if (pVis) {
+            btn.textContent = "Show P Orbitals";
+            pVis = false;
+        } else {
+            btn.textContent = "Hide P Orbitals";
+            pVis = true;
+        }
+        update();
+    }
+    function hideD() {
+        btn = document.getElementById("hide-d");
+        if (dVis) {
+            btn.textContent = "Show D Orbitals";
+            dVis = false;
+        } else {
+            btn.textContent = "Hide D Orbitals";
+            dVis = true;
+        }
+        update();
+    }
+    function hideF() {
+        btn = document.getElementById("hide-f");
+        if (fVis) {
+            btn.textContent = "Show F Orbitals";
+            fVis = false;
+        } else {
+            btn.textContent = "Hide F Orbitals";
+            fVis = true;
+        }
+        update();
+    }
+    function drawPCloud(yMod, curve, value, isX) {
+        if (value >= 0) {
+            ctx.beginPath();
+            ctx.lineJoin = 'miter';
+            switch (isX) {
+                case 0:
+                    ctx.moveTo(x, y);
+                    ctx.quadraticCurveTo(x + curve, y + yMod, x, y + yMod);
+                    ctx.moveTo(x, y);
+                    ctx.quadraticCurveTo(x - curve, y + yMod, x, y + yMod);
+                    break;
+                case 1:
+                    ctx.moveTo(x, y);
+                    ctx.quadraticCurveTo(x + yMod, y + curve, x + yMod, y);
+                    ctx.moveTo(x, y);
+                    ctx.quadraticCurveTo(x + yMod, y - curve, x + yMod, y);
+                    break;
+                case 2:
+                    const xMovement = scale * 12;
+                    ctx.moveTo(x + xMovement, y);
+                    ctx.quadraticCurveTo(x + xMovement + curve, y + yMod, x + xMovement, y + yMod);
+                    ctx.moveTo(x + xMovement, y);
+                    ctx.quadraticCurveTo(x + xMovement - curve, y + yMod, x + xMovement, y + yMod);
+                    break;
+            }
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+    class cloud {
+        constructor(min, type, radius, color) {
+            this.min = min;
+            this.type = type;
+            this.radius = radius;
+            this.color = color;
+        }
+        check(count) {
+            if (count >= this.min) {
+                ctx.strokeStyle = "#000000";
+                ctx.fillStyle = this.color;
+                switch (this.type) {
+                    case "s":
+                        if (sVis) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, this.radius * scale, 0, Math.PI * 2);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.stroke();
+                        }
+                        break;
+                    case "p":
+                        if (pVis) {
+                            var electrons = count - this.min;
+                            var yV = this.radius * scale * 1.5;
+                            var rad = this.radius * scale;
+                            drawPCloud(yV, rad, electrons, 0);
+                            drawPCloud(yV, rad, electrons - 1, 1);
+                            drawPCloud(-yV, rad, electrons, 0);
+                            drawPCloud(-yV, rad, electrons - 1, 1);
+                        }
+                        break;
+                    case "d":
+                        if (dVis) {
+                            ctx.beginPath();
+                            var rad = this.radius * scale / 2;
+                            ctx.moveTo(x, y);
+                            ctx.arc(x - rad, y - rad, rad, Math.PI / 2, Math.PI * 2);
+                            ctx.lineTo(x, y);
+                            ctx.arc(x + rad, y - rad, rad, Math.PI, Math.PI * 2.5);
+                            ctx.lineTo(x, y);
+                            ctx.arc(x + rad, y + rad, rad, Math.PI * 1.5, Math.PI * 3);
+                            ctx.lineTo(x, y);
+                            ctx.arc(x - rad, y + rad, rad, 0, Math.PI * 1.5);
+                            ctx.lineTo(x, y);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.stroke();
+                            if (count - this.min >= 1) {
+                                ctx.beginPath();
+                                var pRad = Math.sqrt(rad * rad + rad * rad)
+                                ctx.moveTo(x, y);
+                                ctx.arc(x - pRad, y, rad, Math.PI / 4, Math.PI * 1.75);
+                                ctx.lineTo(x, y);
+                                ctx.arc(x, y - pRad, rad, Math.PI * 0.75, Math.PI * 2.25);
+                                ctx.lineTo(x, y);
+                                ctx.arc(x + pRad, y, rad, Math.PI * 1.25, Math.PI * 2.75);
+                                ctx.lineTo(x, y);
+                                ctx.arc(x, y + pRad, rad, Math.PI * 1.75, Math.PI * 3.25);
+                                ctx.lineTo(x, y);
+                                ctx.fill();
+                                ctx.stroke();
+                            }
+                        }
+                        break;
+                    case 'f':
+                        ctx.beginPath();
+                        var rad = this.radius * scale / 2;
+                        //orbital 1
+                        ctx.arc(x,y,rad/3, 0, Math.PI * 2);
+                        ctx.arc(x,y,rad/4, 0, Math.PI * 2);
+                        
+                        ctx.fill();
+                        
+                        ctx.stroke();
+                        break;
+                                
+                        
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+    class point {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    var s1 = new cloud(1, "s", 1, "#FF0000");
+    var s2 = new cloud(3, "s", 2, "#FFAA00");
+    var p2 = new cloud(5, "p", 2, "#AAAA00");
+    var s3 = new cloud(11, "s", 3, "#AAFF00");
+    var p3 = new cloud(13, "p", 3, "#00FF00");
+    var s4 = new cloud(19, "s", 4, "#00FFAA");
+    var d3 = new cloud(21, "d", 3, "#00AAAA");
+    var p4 = new cloud(31, "p", 4, "#00AAFF");
+    var s5 = new cloud(37, "s", 5, "#0000FF");
+    var d4 = new cloud(39, "d", 4, "#AA00AA");
+    var p5 = new cloud(49, "p", 5, "#FF0000");
+    var s6 = new cloud(55, "s", 6, "#FFAA00");
+    var f4 = new cloud(58, "f", 4, "#AAAA00");
+    var d5 = new cloud(57, "d", 5, "#AAFF00");
+    var p6 = new cloud(81, "p", 6, "#00FF00");
+    var s7 = new cloud(87, "s", 7, "#00FFAA");
+    var f5 = new cloud(90, "f", 5, "#00AAAA");
+    var d6 = new cloud(89, "d", 6, "#00AAFF");
+    var p7 = new cloud(113, "p", 7, "#0000FF");
+
+    var clouds = [p7, s7, p6, d6, s6, p5, f5, d5, s5, p4, f4, d4, s4, p3, d3, s3, p2, s2, s1];
+
+    function update() {
+        canvas.width = window.innerWidth - 30;
+        canvas.height = window.innerHeight - 40;
+        if (canvas.width / minCanvasWidth < canvas.height / minCanvasHeight) {
+            scale = canvas.width / minCanvasWidth;
+        } else {
+            scale = canvas.height / minCanvasHeight;
+        }
+        x = canvas.width / 2 - scale * 3;
+        y = canvas.height / 2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var count = document.getElementById("electronCount").value;
+        clouds.forEach(orbital => orbital.check(count));
+    }
+
+</script>
