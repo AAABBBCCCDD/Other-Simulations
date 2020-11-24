@@ -1,121 +1,121 @@
 <style>
-    body {
-        margin: 0;
-        overflow: hidden;
-        background: linear-gradient(to bottom, #cedce7 0%,#596a72 100%);
-        font-family: arial;
-        font-size: 13px;
-        font-weight: bold;
+    corps {
+        marge: 0;
+        débordement caché;
+        arrière-plan: gradient linéaire (vers le bas, # cedce7 0%, # 596a72 100%);
+        famille de polices: arial;
+        taille de la police: 13px;
+        poids de la police: gras;
     }
 
-    #controls-wrapper {
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        width: 100%;
-        padding: 10px;
+    # controls-wrapper {
+        position: absolue;
+        indice z: 2;
+        haut: 0;
+        largeur: 100%;
+        rembourrage: 10px;
     }
 
-        #controls-wrapper > select, button {
-            background-color: #000;
-            color: #fff;
-            border: 1px solid #545454;
+        # controls-wrapper> sélectionnez, bouton {
+            couleur de fond: # 000;
+            couleur: #fff;
+            bordure: 1px solide # 545454;
         }
 
-        #controls-wrapper > input {
-            width: 100px;
-            height: 20px;
+        # controls-wrapper> entrée {
+            largeur: 100px;
+            hauteur: 20px;
         }
 </style>
-    <section id="controls-wrapper">
-        <label id="massLabel">Mass of Added Planet</label>
-        <select id="masses-list">
-            <option value="0.000003003">Earth</option>
-            <option value="0.0009543">Jupiter</option>
-            <option value="1">Sun</option>
-            <option value="0.1">Red Dwarf Star</option>
+    <section id = "controls-wrapper">
+        <label id = "massLabel"> Masse de la planète ajoutée </label>
+        <select id = "masses-list">
+            <option value = "0.000003003"> Terre </option>
+            <option value = "0.0009543"> Jupiter </option>
+            <option value = "1"> Soleil </option>
+            <option value = "0.1"> Étoile naine rouge </option>
         </select>
-        <button id="reset-button">Reset</button>
-        <button id="pause-button" onclick="pauseBtnClick()">Pause</button>
-        <button id="show-info" onclick="showInfo = true">Show Info</button>
-        <button id="clear-system" onclick="innerSolarSystem.masses = []; showInfo = false; graphs = false; selectedNum = 0">Clear System</button>
-        <label id="scaleLabel" for="scaleInput">Scale</label>
-        <input type="number" id="scaleInput" value="70" min="0">
-        <button id="hide-button" onclick="hideBtnClick()"></button>
+        <button id = "reset-button"> Réinitialiser </button>
+        <button id = "pause-button" onclick = "pauseBtnClick ()"> Pause </button>
+        <button id = "show-info" onclick = "showInfo = true"> Afficher les informations </button>
+        <button id = "clear-system" onclick = "innerSolarSystem.masses = []; showInfo = false; graphs = false; selectedNum = 0"> Effacer le système </button>
+        <label id = "scaleLabel" for = "scaleInput"> Scale </label>
+        <input type = "number" id = "scaleInput" value = "70" min = "0">
+        <button id = "hide-button" onclick = "hideBtnClick ()"> </button>
     </section>
-    <canvas id="canvas"></canvas>
+    <canvas id = "canvas"> </canvas>
 
 <script>
-    /*
-    * Gravitational n-body algorithm
-   */
-    document.getElementById("hide-button").textContent = "<";
-    var fullscreenE = false;
-    var hidden = false;
+    / *
+    * Algorithme gravitationnel à n corps
+   * /
+    document.getElementById ("bouton-masquer"). textContent = "<";
+    var fullscreenE = faux;
+    var caché = faux;
     var lastTimeFocused = 0;
     var key;
     var keyRegistered = false;
-    var graphs = false;
-    const btnStyleVisibility = document.getElementById("reset-button").style.visibility;
-    window.addEventListener("keypress", updateKey, false);
-    function updateKey(e) {
-        key = e.key;
+    var graphs = faux;
+    const btnStyleVisibility = document.getElementById ("bouton de réinitialisation"). style.visibility;
+    window.addEventListener ("keypress", updateKey, false);
+    function updateKey (e) {
+        clé = e.key;
     }
-    function hideBtnClick() {
-        if (hidden) {
-            hidden = false;
-            var value = btnStyleVisibility;
-            document.getElementById("reset-button").style.display = value;
-            document.getElementById("pause-button").style.display = value;
-            document.getElementById("show-info").style.display = value;
-            document.getElementById("clear-system").style.display = value;
-            document.getElementById("massLabel").style.display = value;
-            document.getElementById("masses-list").style.display = value;
-            document.getElementById("scaleLabel").style.display = value;
-            document.getElementById("scaleInput").style.display = value;
-            document.getElementById("hide-button").textContent = "<";
-        } else {
-            hidden = true;
-            var value = "none";
-            document.getElementById("reset-button").style.display = value;
-            document.getElementById("pause-button").style.display = value;
-            document.getElementById("show-info").style.display = value;
-            document.getElementById("clear-system").style.display = value;
-            document.getElementById("massLabel").style.display = value;
-            document.getElementById("masses-list").style.display = value;
-            document.getElementById("scaleLabel").style.display = value;
-            document.getElementById("scaleInput").style.display = value;
-            document.getElementById("hide-button").textContent = ">";
+    function hideBtnClick () {
+        if (caché) {
+            caché = faux;
+            valeur var = btnStyleVisibility;
+            document.getElementById ("bouton de réinitialisation"). style.display = valeur;
+            document.getElementById ("bouton pause"). style.display = valeur;
+            document.getElementById ("show-info"). style.display = valeur;
+            document.getElementById ("clear-system"). style.display = valeur;
+            document.getElementById ("massLabel"). style.display = valeur;
+            document.getElementById ("liste de masses"). style.display = valeur;
+            document.getElementById ("scaleLabel"). style.display = valeur;
+            document.getElementById ("scaleInput"). style.display = valeur;
+            document.getElementById ("bouton-masquer"). textContent = "<";
+        } autre {
+            caché = vrai;
+            valeur var = "aucun";
+            document.getElementById ("bouton de réinitialisation"). style.display = valeur;
+            document.getElementById ("bouton pause"). style.display = valeur;
+            document.getElementById ("show-info"). style.display = valeur;
+            document.getElementById ("clear-system"). style.display = valeur;
+            document.getElementById ("massLabel"). style.display = valeur;
+            document.getElementById ("liste de masses"). style.display = valeur;
+            document.getElementById ("scaleLabel"). style.display = valeur;
+            document.getElementById ("scaleInput"). style.display = valeur;
+            document.getElementById ("bouton-masquer"). textContent = ">";
         }
     }
-    var numbersVelocity = [];
-    var numbersDistance = [];
-    var pause = false;
-    var showInfo = false;
+    var nombresVelocity = [];
+    var nombresDistance = [];
+    var pause = faux;
+    var showInfo = faux;
     var selectedNum = 0;
     var maxMap = -1000;
     var minMap = 1000;
-    function pauseBtnClick() {
-        var pauseBtn = document.getElementById("pause-button");
+    function pauseBtnClick () {
+        var pauseBtn = document.getElementById ("bouton pause");
         if (pause) {
-            pause = false;
+            pause = faux;
             pauseBtn.textContent = "Pause";
-        } else {
-            pause = true;
-            pauseBtn.textContent = "Resume";
+        } autre {
+            pause = vrai;
+            pauseBtn.textContent = "Reprendre";
         }
     }
-    function minMax(x) {
-        if (x > maxMap) {
+    function minMax (x) {
+        if (x> maxMap) {
             maxMap = x;
         }
-        if (x < minMap) {
+        if (x <minMap) {
             minMap = x;
         }
         return x;
     }
     class nBodyProblem {
-        constructor(params) {
+        constructeur (paramètres) {
             this.g = params.g;
             this.dt = params.dt;
             this.softeningConstant = params.softeningConstant;
@@ -123,632 +123,22 @@
             this.masses = params.masses;
         }
 
-        updatePositionVectors() {
+        updatePositionVectors () {
             const massesLen = this.masses.length;
 
-            for (let i = 0; i < massesLen; i++) {
-                const massI = this.masses[i];
+            pour (soit i = 0; i <massesLen; i ++) {
+                const massI = this.masses [i];
 
-                massI.x += massI.vx * this.dt;
-                massI.y += massI.vy * this.dt;
-                massI.z += massI.vz * this.dt;
+                massI.x + = massI.vx * this.dt;
+                massI.y + = massI.vy * this.dt;
+                massI.z + = massI.vz * this.dt;
             }
 
-            return this;
+            renvoyer ceci;
         }
 
-        updateVelocityVectors() {
+        updateVelocityVectors () {
             const massesLen = this.masses.length;
 
-            for (let i = 0; i < massesLen; i++) {
-                const massI = this.masses[i];
-
-                massI.vx += massI.ax * this.dt;
-                massI.vy += massI.ay * this.dt;
-                massI.vz += massI.az * this.dt;
-            }
-        }
-
-        updateAccelerationVectors() {
-            const massesLen = this.masses.length;
-
-            for (let i = 0; i < massesLen; i++) {
-                let ax = 0;
-                let ay = 0;
-                let az = 0;
-
-                const massI = this.masses[i];
-
-                for (let j = 0; j < massesLen; j++) {
-                    if (i !== j) {
-                        const massJ = this.masses[j];
-
-                        const dx = massJ.x - massI.x;
-                        const dy = massJ.y - massI.y;
-                        const dz = massJ.z - massI.z;
-
-                        const distSq = dx * dx + dy * dy + dz * dz;
-
-                        const f =
-                            (this.g * massJ.m) /
-                            (distSq * Math.sqrt(distSq + this.softeningConstant));
-
-                        ax += dx * f;
-                        ay += dy * f;
-                        az += dz * f;
-                    }
-                }
-
-                massI.ax = ax;
-                massI.ay = ay;
-                massI.az = az;
-            }
-
-            return this;
-        }
-    }
-
-    /*
-     * Inputs for our nBodyProblem
-     */
-
-    const g = 39.5;
-    const dt = 0.008; //0.005 years is equal to 1.825 days
-    const softeningConstant = 0.15;
-
-    const masses = [{
-        name: "Sun", //We use solar masses as the unit of mass, so the mass of the Sun is exactly 1
-        m: 1,
-        x: -1.50324727873647e-6,
-        y: -3.93762725944737e-6,
-        z: -4.86567877183925e-8,
-        vx: 3.1669325898331e-5,
-        vy: -6.85489559263319e-6,
-        vz: -7.90076642683254e-7,
-        c: "#FFFF00"
-    },
-    {
-        name: "Mercury",
-        m: 1.65956463e-7,
-        x: -0.346390408691506,
-        y: -0.272465544507684,
-        z: 0.00951633403684172,
-        vx: 4.25144321778261,
-        vy: -7.61778341043381,
-        vz: -1.01249478093275,
-        c: "#f0a243"
-    },
-    {
-        name: "Venus",
-        m: 2.44699613e-6,
-        x: -0.168003526072526,
-        y: 0.698844725464528,
-        z: 0.0192761582256879,
-        vx: -7.2077847105093,
-        vy: -1.76778886124455,
-        vz: 0.391700036358566,
-        c: "#FFDDDD"
-    },
-    {
-        name: "Earth",
-        m: 3.0024584e-6,
-        x: 0.648778995445634,
-        y: 0.747796691108466,
-        z: -3.22953591923124e-5,
-        vx: -4.85085525059392,
-        vy: 4.09601538682312,
-        vz: -0.000258553333317722,
-        c: "#00FF00"
-    },
-    {
-        m: 3.213e-7,
-        name: "Mars",
-        x: -0.574871406752105,
-        y: -1.395455041953879,
-        z: -0.01515164037265145,
-        vx: 4.9225288800471425,
-        vy: -1.5065904473191791,
-        vz: -0.1524041758922603,
-        c: "#FF5500"
-    }
-    ];
-
-    /*
-     * Create an instance of the nBodyProblem with the inputs above
-     * We clone the masses array by parsing a stringified version of it so that we can reset the simulator with a minimum amount of fuss
-     */
-
-    const innerSolarSystem = new nBodyProblem({
-        g,
-        dt,
-        masses: JSON.parse(JSON.stringify(masses)),
-        softeningConstant
-    });
-
-    /*
-     * Motion trails
-     */
-
-    class Manifestation {
-        constructor(ctx, trailLength, radius) {
-            this.ctx = ctx;
-
-            this.trailLength = trailLength;
-
-            this.radius = radius;
-
-            this.positions = [];
-        }
-
-        storePosition(x, y) {
-            this.positions.push({
-                x,
-                y
-            });
-
-            if (this.positions.length > this.trailLength) this.positions.shift();
-        }
-
-        draw(x, y, c) {
-            this.storePosition(x, y);
-
-            const positionsLen = this.positions.length;
-
-            for (let i = 0; i < positionsLen; i++) {
-                let transparency;
-                let circleScaleFactor;
-
-                const scaleFactor = i / positionsLen;
-
-                if (i === positionsLen - 1) {
-                    transparency = 1;
-                    circleScaleFactor = 1;
-                } else {
-                    transparency = scaleFactor / 2;
-                    circleScaleFactor = scaleFactor;
-                }
-
-                this.ctx.beginPath();
-                this.ctx.arc(
-                    this.positions[i].x,
-                    this.positions[i].y,
-                    circleScaleFactor * this.radius,
-                    0,
-                    2 * Math.PI
-                );
-                if(c == null | transparency < 1){
-                    this.ctx.fillStyle = `rgb(0, 12, 153, ${transparency})`;
-                    this.ctx.fill();
-                } else {
-                    this.ctx.fillStyle = c;
-                    this.ctx.fill();
-                    this.ctx.strokeStyle = `rgb(0, 12, 153, ${transparency})`;
-                    this.ctx.stroke();
-                }
-
-            }
-        }
-    }
-
-    /*
-     * Get the canvas element and its context from the DOM
-     */
-
-    const canvas = document.querySelector("#canvas");
-    const ctx = canvas.getContext("2d");
-
-    /*
-     * Full screen action
-     */
-
-    var width = (canvas.width = window.innerWidth);
-    var height = (canvas.height = window.innerHeight);
-
-    /*
-     * Animation constants
-     *
-     * scale is the number of pixels per astronomical units
-     *
-     * radius is the radius of the circle that represents the current position of a mass
-     *
-     * trailLength is the number of previous positions that we should draw in the motion trail
-     */
-
-    var scale = 70;
-    const radius = 4;
-    const trailLength = 35;
-
-    /*
-     * Iterate over the masses being simulated and add a visual manifestation for each of them
-     */
-
-    const populateManifestations = masses => {
-        masses.forEach(
-            mass =>
-                (mass["manifestation"] = new Manifestation(
-                    ctx,
-                    trailLength,
-                    radius
-                ))
-        );
-    };
-
-    populateManifestations(innerSolarSystem.masses);
-
-    /*
-     * Click the reset button to reset the simulation
-    */
-
-    document.querySelector('#reset-button').addEventListener('click', () => {
-        innerSolarSystem.masses = JSON.parse(JSON.stringify(masses));
-        populateManifestations(innerSolarSystem.masses);
-        showInfo = false;
-        selectedNum = 0;
-        graphs = false;
-        document.getElementById("scaleInput").value = 70;
-    }, false);
-
-    /*
-     * Code for adding masses with you mouse
-     */
-
-    //Step 1.
-
-    let mousePressX = 0;
-    let mousePressY = 0;
-
-    //Step 2.
-
-    let currentMouseX = 0;
-    let currentMouseY = 0;
-
-    //Step 3.
-
-    let dragging = false;
-
-    //Step 4.
-
-    canvas.addEventListener(
-        "mousedown",
-        e => {
-            mousePressX = e.clientX;
-            mousePressY = e.clientY;
-            dragging = true;
-        },
-        false
-    );
-
-    //Step 5
-
-    canvas.addEventListener(
-        "mousemove",
-        e => {
-            currentMouseX = e.clientX;
-            currentMouseY = e.clientY;
-        },
-        false
-    );
-
-    var dist = 1000;
-    var num = 0;
-
-    function checkDistMouse(planet) {
-        var distX = Math.abs(planet.x - (mousePressX - width / 2) / scale);
-        var distY = Math.abs(planet.y - (mousePressY - height / 2) / scale);
-        var dist2 = Math.sqrt(distX * distX + distY * distY);
-        if (dist2 < dist) {
-            dist = dist2;
-            selectedNum = num;
-        }
-        num++;
-    }
-    const massesList = document.querySelector("#masses-list");
-
-    canvas.addEventListener(
-        "mouseup",
-        e => {
-            dist = 1000;
-            num = 0;
-            innerSolarSystem.masses.forEach(planet => checkDistMouse(planet));
-            if (dist > 0.1) {
-                const x = (mousePressX - width / 2) / scale;
-                const y = (mousePressY - height / 2) / scale;
-                const z = 0;
-                const vx = (e.clientX - mousePressX) / 35;
-                const vy = (e.clientY - mousePressY) / 35;
-                const vz = 0;
-                var c;
-                switch(massesList.selectedIndex){
-                    case 0:
-                        c = "#00FF00";
-                        break;
-                    case 1:
-												c = "#ffde82";
-                        break;
-                    case 2:
-                        c = "#FFFF00";
-                        break;
-										case 3:
-												c = "#FF0000";
-												break;
-                }
-                innerSolarSystem.masses.push({
-                    m: parseFloat(massesList.value),
-                    x,
-                    y,
-                    z,
-                    vx,
-                    vy,
-                    vz,
-                    c,
-                    manifestation: new Manifestation(ctx, trailLength, radius)
-                });
-
-                innerSolarSystem.masses[innerSolarSystem.masses.length - 1].name  = massesList.options[massesList.selectedIndex].text + " " + (innerSolarSystem.masses.length - 1);
-            } else {
-                showInfo = true;
-                numbersDistance = [];
-                numbersVelocity = [];
-            }
-            dragging = false;
-        },
-        false
-    );
-
-    /*
-     * The animate function that sets everything in motion.
-     * We run it 60 times a second with the help of requestAnimationFrame
-     */
-
-    const animate = () => {
-        width = (canvas.width = window.innerWidth);
-        height = (canvas.height = window.innerHeight);
-        /*
-         * Advance our simulation by one step
-         */
-        if (!pause) {
-            innerSolarSystem
-                .updatePositionVectors()
-                .updateAccelerationVectors()
-                .updateVelocityVectors();
-        }
-
-        /*
-         * Clear the canvas in preparation for the next drawing cycle
-         */
-
-        ctx.clearRect(0, 0, width, height);
-        scale = document.getElementById("scaleInput").value;
-        const massesLen = innerSolarSystem.masses.length;
-        var y2 = 0;
-        if (key == " ") {
-            pauseBtnClick();
-            keyRegistered = true;
-        }
-        if (canvas.width < 550) {
-            var massText = document.getElementById("massLabel");
-            massText.innerHTML = "Mass";
-        } else {
-            var massText = document.getElementById("massLabel");
-            massText.innerHTML = "Mass of Added Planet";
-        }
-        if (showInfo && !hidden) {
-            var y = 2;
-            var planet = innerSolarSystem.masses[selectedNum]
-            if (planet.name != null) {
-                ctx.fillText("Name: " + planet.name, 30, y * 20);
-                y++;
-                ctx.fillText("ID: " + selectedNum, 30, y * 20);
-            } else {
-                ctx.fillText("ID: " + selectedNum, 30, y * 20);
-            }
-            y++;
-            if (selectedNum != 0) {
-                var distSX = Math.abs(planet.x - innerSolarSystem.masses[0].x)
-                var distSY = Math.abs(planet.y - innerSolarSystem.masses[0].y)
-                var distS = Math.sqrt(distSX * distSX + distSY * distSY);
-                ctx.fillText("Distance From Sun: " + distS.toFixed(2) + " AU", 30, y * 20);
-                numbersDistance.push(distS);
-                y++;
-            }
-            var velocity = Math.sqrt(planet.vx * planet.vx + planet.vy * planet.vy);
-            ctx.fillText("Velocity: " + velocity.toFixed(2) + " AU/YR", 30, y * 20);
-            numbersVelocity.push(velocity);
-            y++;
-            if (!graphs) {
-                ctx.fillText("Press G For Graphs", 30, y * 20);
-                y++;
-                ctx.fillText("Press , or . to cycle planets", 30, y * 20);
-                y++;
-                switch (key) {
-                    case "g":
-                        graphs = true;
-                        keyRegistered = true;
-                        break;
-                    case ",":
-                        if (selectedNum > 0) {
-                            selectedNum--;
-                            numbersDistance = [];
-                            numbersVelocity = [];
-                            keyRegistered = true;
-                        }
-                        break;
-                    case ".":
-                        if (selectedNum < innerSolarSystem.masses.length - 1) {
-                            selectedNum++;
-                            numbersDistance = [];
-                            numbersVelocity = [];
-                            keyRegistered = true;
-                        }
-                        break;
-                }
-            } else {
-                ctx.fillText("Press G again To Exit Graphs", 30, y * 20);
-                y++;
-                ctx.fillText("Press , or . to cycle planets", 30, y * 20);
-                y++;
-                switch (key) {
-                    case "g":
-                        graphs = false;
-                        keyRegistered = true;
-                        break;
-                    case ",":
-                        if (selectedNum > 0) {
-                            selectedNum--;
-                            numbersDistance = [];
-                            numbersVelocity = [];
-                            keyRegistered = true;
-                        }
-                        break;
-                    case ".":
-                        if (selectedNum < innerSolarSystem.masses.length - 1) {
-                            selectedNum++;
-                            numbersDistance = [];
-                            numbersVelocity = [];
-                            keyRegistered = true;
-                        }
-                        break;
-                }
-            }
-            y2 = y;
-        }
-        /*
-         * Let us draw some masses!
-         */
-
-        for (let i = 0; i < innerSolarSystem.masses.length; i++) {
-            const massI = innerSolarSystem.masses[i];
-
-            /*
-             * The origin (x = 0, y = 0) of the canvas coordinate system is in the top left corner
-             * To prevent our simulation from being centered on the top left corner, include the x and y offsets
-             * So that it is centered smack in the middle of the canvas
-             */
-
-            const x = width / 2 + massI.x * scale;
-            const y = height / 2 + massI.y * scale;
-
-            /*
-             * Draw our motion trail
-             */
-
-            massI.manifestation.draw(x, y, massI.c);
-            /*
-             * If the mass has a name, draw it onto the canvas next to the leading circle of the motion trail
-             */
-            ctx.fillStyle = `rgb(0, 12, 153, ${1})`;
-            if (massI.name) {
-                ctx.font = "14px Arial";
-                ctx.fillText(massI.name, x + 12, y + 4);
-                ctx.fillStyle = massI.c
-                ctx.fill();
-            }
-            /*
-             * Stop masses from escaping the bounds of the viewport
-             * If either condition is met, the velocity of the mass will be reversed
-             * And the mass will bounce back into the inner solar system
-             */
-
-            if (x / 5 < radius || x / 5> width - radius){
-							innerSolarSystem.masses.splice(i,1);
-							if(selectedNum == i){
-								selectedNum--;
-							}
-            }
-
-            if (y / 5 < radius || y / 5 > height - radius){
-							innerSolarSystem.masses.splice(i,1);
-							if(selectedNum == i){
-								selectedNum--;
-							}
-            }
-        }
-        /*
-         * Draw the line which indicates direction and velocity of a mass that is about to be added when the mouse is being dragged
-         */
-
-        if (dragging) {
-            ctx.beginPath();
-            ctx.moveTo(mousePressX, mousePressY);
-            ctx.lineTo(currentMouseX, currentMouseY);
-            ctx.strokeStyle = "red";
-            ctx.stroke();
-        }
-        const graphLength = 200;
-        if (graphs && !pause && !hidden) {
-            var oldStyle = `rgb(0, 12, 153, ${1})`;;
-            if (selectedNum != 0) {
-								ctx.fillStyle = oldStyle
-                ctx.fillText("Distance (AU)", 30, y2 * 20);
-                y2++;
-                ctx.fillStyle = "#FFFFFF";
-                ctx.fillRect(30, y2 * 20, graphLength, 100);
-                var distanceMax = y2 * 20 + 100;
-                y2 += 7;
-            }
-            ctx.fillStyle = oldStyle
-            ctx.fillText("Velocity (AU/YR)", 30, y2 * 20);
-            y2++;
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(30, y2 * 20, graphLength, 100);
-            var velocityMax = y2 * 20 + 100;
-            ctx.fillStyle = oldStyle;
-            if (numbersDistance.length <= graphLength && numbersVelocity.length <= graphLength) {
-                minMap = 1000;
-                maxMap = -1000;
-                numbersDistance.map(l => minMax(l));
-                ctx.fillText(minMap.toFixed(2), 0, distanceMax, 30)
-                ctx.fillText(maxMap.toFixed(2), 0, distanceMax - 90, 30);
-                var mA = -minMap;
-                ctx.beginPath();
-                var mM = 100 / (maxMap - minMap);
-                var yPoint2 = (numbersDistance[0] + mA) * mM;
-                ctx.moveTo(30, distanceMax - yPoint2);
-                for (k = 1; k < numbersDistance.length - 1; k++) {
-                    var yPoint = (numbersDistance[k] + mA) * mM;
-                    ctx.lineTo(30 + k, distanceMax - yPoint);
-                }
-                ctx.stroke();
-                minMap = 1000;
-                maxMap = -1000;
-                numbersVelocity.map(l => minMax(l));
-                ctx.fillText(minMap.toFixed(2), 0, velocityMax, 30)
-                ctx.fillText(maxMap.toFixed(2), 0, velocityMax - 90, 30);
-                mA = -minMap;
-                ctx.beginPath();
-                mM = 100 / (maxMap - minMap);
-                yPoint2 = (numbersVelocity[0] + mA) * mM;
-                ctx.moveTo(30, velocityMax - yPoint2);
-                for (k = 0; k < numbersVelocity.length - 1; k++) {
-                    var yPoint = (numbersVelocity[k] + mA) * mM;
-                    ctx.lineTo(30 + k, velocityMax - yPoint);
-                }
-                ctx.stroke();
-                if (numbersDistance.length == graphLength) {
-                    numbersDistance.shift();
-                }
-                if (numbersVelocity.length == graphLength) {
-                    numbersVelocity.shift();
-                }
-
-            }
-            if (numbersDistance.length > graphLength) {
-                while (numbersDistance.length > graphLength - 1) {
-                    numbersDistance.shift();
-                }
-            }
-            if (numbersVelocity.length > graphLength) {
-                while (numbersVelocity.length > graphLength - 1) {
-                    numbersVelocity.shift();
-                }
-            }
-        }
-        if (key = null) {
-            keyRegistered = false;
-        }
-        key = null;
-        requestAnimationFrame(animate);
-    };
-    window.focus();
-    animate();
-</script>
+            pour (soit i = 0; i <massesLen; i ++) {
+                const massI = this
