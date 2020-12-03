@@ -1,14 +1,16 @@
-<p id="MainText">Test</p>
+<label id="MainText"></label>
 
 <script>
   var typingSpeed = 10;
-  function writeText(text) {
-    document.getElementById("MainText").innerHtml += text.charAt(0);
-    text = text.subString(1);
-    if(text.length > 1){
-      setTimeout(writeText(text), typingSpeed);
+  var text = "Welcome To Isaac's Simulation Console, If You Got Here By Mistake, don't worry just close this tab";
+  function writeText(){
+  	console.log(text.charAt(0));
+    document.write(text.charAt(0));
+    text = text.substring(1);
+    if(text.length > 0){
+      setTimeout(writeText, typingSpeed);
     }
   }
   
-  writeText("Welcome To Isaac's Simulation Console, If You Got Here By Mistake, don't worry just close this tab");
+  writeText();
 </script>
