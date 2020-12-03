@@ -1,0 +1,14 @@
+<p id="MainText"></p>
+
+<script>
+  var typingSpeed = 10;
+  function writeText(text) {
+    document.getElementById("MainText").innerHtml += text.charAt(0);
+    text.shift();
+    if(text.length > 1){
+      setTimeout(writeText(text), speed);
+    }
+  }
+  
+  writeText("Welcome To Isaac's Simulation Console, If You Got Here By Mistake, don't worry just close this tab");
+</script>
