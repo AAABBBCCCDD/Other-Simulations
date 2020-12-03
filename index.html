@@ -4,7 +4,7 @@
   var typingSpeed = 10;
   function writeText(text) {
     document.getElementById("MainText").innerHtml += text.charAt(0);
-    text.shift();
+    text = text.subString(1);
     if(text.length > 1){
       setTimeout(writeText(text), speed);
     }
